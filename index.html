@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For Mahi 💖</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+      flex-direction: column;
+    }
+
+    .letter {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 20px;
+      max-width: 500px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      background: #ff6f91;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ff4d6d;
+      transform: scale(1.1);
+    }
+
+    .hidden-message {
+      margin-top: 15px;
+      font-size: 1.3rem;
+      display: none;
+      animation: fadeIn 2s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    /* Game area */
+    #game {
+      width: 400px;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+      display: none;
+    }
+
+    #basket {
+      width: 60px;
+      height: 30px;
+      background: #ff4d6d;
+      border-radius: 10px;
+      position: absolute;
+      bottom: 10px;
+      left: 170px;
+    }
+
+    .falling-heart {
+      position: absolute;
+      font-size: 24px;
+      animation: fall 4s linear forwards;
+    }
+
+    @keyframes fall {
+      from { top: 0; }
+      to { top: 380px; }
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="letter">
+    <h1>Hi My Love, Mahi Pandey 💕</h1>
+    <p>
+      This little website is just for you.  
+      You make my world brighter every day.  
+    </p>
+    <button onclick="showMessage()">Click Me 🌸</button>
+    <div class="hidden-message" id="hiddenMessage">
+      I love you, Mahi, more than words can say 💖<br><br>
+      <button onclick="startGame()">Play a Game 🎮</button>
+    </div>
+  </div>
+
+  <div id="game">
+    <div id="basket"></div>
+  </div>
+  <div id="score"></div>
+
+  <script>
+    function showMessage() {
+      document.getElementById('hiddenMessage').style.display = 'block';
+    }
+
+    let gameInterval;
+    let score = 0;
+    const basketSpeed = 20;
+
+    function startGame() {
+      document.getElementById('game').style.display = 'block';
+      document.getElementById('score').innerText = "Score: 0";
+      score = 0;
+
+      gameInterval = setInterval(createHeart, 1500);
+      document.addEventListener('keydown', moveBasket);
+    }
+
+    function createHeart() {
+      const game = document.getElementById('game');
+      const heart = document.createElement('div');
+      heart.className = 'falling-heart';
+      heart.innerHTML = '❤️';
+      heart.style.left = Math.random() * 370 + 'px';
+      heart.style.top = '0px';
+      game.appendChild(heart);
+
+      let fall = setInterval(() => {
+        let heartTop = parseInt(heart.style.top);
+        heart.style.top = heartTop + 5 + 'px';
+
+        const basket = document.getElementById('basket');
+        const basketLeft = parseInt(basket.style.left);
+        const basketRight = basketLeft + 60;
+        const basketTop = 370;
+
+        const heartLeft = parseInt(heart.style.left);
+        const heartRight = heartLeft + 24;
+
+        if (heartTop >= basketTop && heartLeft >= basketLeft && heartRight <= basketRight) {
+          score++;
+          document.getElementById('score').innerText = "Score: " + score;
+          heart.remove();
+          clearInterval(fall);
+
+          if (score === 10) {
+            alert("You win my heart forever, Mahi ❤️");
+            clearInterval(gameInterval);
+          }
+        }
+
+        if (heartTop > 380) {
+          heart.remove();
+          clearInterval(fall);
+        }
+      }, 50);
+    }
+
+    function moveBasket(e) {
+      const basket = document.getElementById('basket');
+      let left = parseInt(basket.style.left);
+
+      if (e.key === "ArrowLeft" && left > 0) {
+        basket.style.left = left - basketSpeed + 'px';
+      } else if (e.key === "ArrowRight" && left < 340) {
+        basket.style.left = left + basketSpeed + 'px';
+      }
+    }
+  </script>
+</body>
+</html>
